@@ -1,0 +1,68 @@
+postgres=# CREATE TABLE university (id SERIAL PRIMARY KEY, name VARCHAR(100), age INT, email VARCHAR(100), faculty VARCHAR(100));
+CREATE TABLE
+postgres=# INSERT INTO university (name, age, email, faculty)
+postgres-# VALUES ('Aktan', 21, 'AktanR1@auca.kg', 'IBL'), ('Isa', 20, 'IsaSatim@auca.kg', 'AMI'), ('Adil', 19, 'AdilLL@auca.kg', 'AMI'), ('Roma', 23, 'Ramazan@auca.kg', 'SFW');
+INSERT 0 4
+postgres=# SELECT * FROM university
+postgres-# ;
+ id | name  | age |      email       | faculty
+----+-------+-----+------------------+---------
+  1 | Aktan |  21 | AktanR1@auca.kg  | IBL
+  2 | Isa   |  20 | IsaSatim@auca.kg | AMI
+  3 | Adil  |  19 | AdilLL@auca.kg   | AMI
+  4 | Roma  |  23 | Ramazan@auca.kg  | SFW
+(4 rows)
+
+
+postgres=# SELECT name, email FROM university
+postgres-# ;
+ name  |      email
+-------+------------------
+ Aktan | AktanR1@auca.kg
+ Isa   | IsaSatim@auca.kg
+ Adil  | AdilLL@auca.kg
+ Roma  | Ramazan@auca.kg
+(4 rows)
+
+
+postgres=# SELECT university_id, faculty FROM university;
+ERROR:  character with byte sequence 0xd0 0x9e in encoding "UTF8" has no equivalent in encoding "WIN1252"
+postgres=# SELECT id, faculty FROM university;
+ id | faculty
+----+---------
+  1 | IBL
+  2 | AMI
+  3 | AMI
+  4 | SFW
+(4 rows)
+
+
+postgres=# SELECT name, email FROM university WHERE name = 'Adil';
+ name |     email
+------+----------------
+ Adil | AdilLL@auca.kg
+(1 row)
+
+
+postgres=# SELECT name, email FROM university ORDER BY;
+ERROR:  character with byte sequence 0xd0 0x9e in encoding "UTF8" has no equivalent in encoding "WIN1252"
+postgres=# SELECT name, email FROM university ORDER BY;
+ERROR:  character with byte sequence 0xd0 0x9e in encoding "UTF8" has no equivalent in encoding "WIN1252"
+postgres=# SELECT name, email FROM university LIMIT 2;
+ name  |      email
+-------+------------------
+ Aktan | AktanR1@auca.kg
+ Isa   | IsaSatim@auca.kg
+(2 rows)
+
+
+postgres=# SELECT name, email FROM university ORDER BY;
+ERROR:  character with byte sequence 0xd0 0x9e in encoding "UTF8" has no equivalent in encoding "WIN1252"
+postgres=# SELECT name, email FROM university ORDER BY name;
+ name  |      email
+-------+------------------
+ Adil  | AdilLL@auca.kg
+ Aktan | AktanR1@auca.kg
+ Isa   | IsaSatim@auca.kg
+ Roma  | Ramazan@auca.kg
+(4 rows)
