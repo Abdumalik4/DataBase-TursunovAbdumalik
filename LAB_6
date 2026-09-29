@@ -1,0 +1,58 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.6)
+Type "help" for help.
+
+postgres=# SELECT * FROM university;
+ id | name  | age |      email       | faculty
+----+-------+-----+------------------+---------
+  1 | Aktan |  21 | AktanR1@auca.kg  | IBL
+  2 | Isa   |  20 | IsaSatim@auca.kg | AMI
+  3 | Adil  |  19 | AdilLL@auca.kg   | AMI
+  4 | Roma  |  23 | Ramazan@auca.kg  | SFW
+(4 rows)
+                               ^
+postgres=# CREATE TABLE test_table(student_id SERIAL PRIMARY KEY, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL);
+CREATE TABLE
+postgres=# DROP TABLE test_table;
+DROP TABLE
+postgres=# ALTER TABLE university
+postgres-# ADD COLUMN date_of_birth DATE;
+ALTER TABLE
+postgres=# SELECT * FROM university;
+ id | name  | age |      email       | faculty | date_of_birth
+----+-------+-----+------------------+---------+---------------
+  1 | Aktan |  21 | AktanR1@auca.kg  | IBL     |
+  2 | Isa   |  20 | IsaSatim@auca.kg | AMI     |
+  3 | Adil  |  19 | AdilLL@auca.kg   | AMI     |
+  4 | Roma  |  23 | Ramazan@auca.kg  | SFW     |
+(4 rows)
+
+
+postgres=# ALTER TABLE university
+postgres-# DROP COLUMN date_of_birth;
+ALTER TABLE
+postgres=# ALTER TABLE university
+postgres-# ALTER COLUMN name TYPE TEXT;
+ALTER TABLE
+postgres=# ALTER TABLE university
+postgres-# ADD CONSTRAINT unique_students_email UNIQUE (email);
+ALTER TABLE
+postgres=# ALTER TABLE university
+postgres-# RENAME COLUMN email TO email_address;
+ALTER TABLE
+postgres=# ALTER TABLE university
+postgres-# RENAME TO auca_university;
+ALTER TABLE
+postgres=# SELECT * FROM auca_university;
+ id | name  | age |  email_address   | faculty
+----+-------+-----+------------------+---------
+  1 | Aktan |  21 | AktanR1@auca.kg  | IBL
+  2 | Isa   |  20 | IsaSatim@auca.kg | AMI
+  3 | Adil  |  19 | AdilLL@auca.kg   | AMI
+  4 | Roma  |  23 | Ramazan@auca.kg  | SFW
+(4 rows)
