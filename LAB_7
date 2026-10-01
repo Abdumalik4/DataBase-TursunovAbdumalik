@@ -1,0 +1,55 @@
+postgres=# CREATE TABLE students_1 (student_id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(100) UNIQUE, faculty VARCHAR(50) );
+CREATE TABLE
+postgres=# INSERT INTO students_1 (name, email, faculty) VALUES
+postgres-# ('Malik Tursunov', 'abdumaliktrsnv@gmail.com', 'AMI'),
+postgres-# ('Isa Satimbaev', 'IsaSatimbaev@gmail.com', 'AMI'),
+postgres-# ('Ramir Khusniarov', 'RamirKhusniarman@gmail.com', 'SFW');
+INSERT 0 3
+postgres=# SELECT * FROM students_1;
+ student_id |       name       |           email            | faculty
+------------+------------------+----------------------------+---------
+          1 | Malik Tursunov   | abdumaliktrsnv@gmail.com   | AMI
+          2 | Isa Satimbaev    | IsaSatimbaev@gmail.com     | AMI
+          3 | Ramir Khusniarov | RamirKhusniarman@gmail.com | SFW
+(3 rows)
+
+postgres=# CREATE TABLE course_enrollments (student_id INTEGER, course_id INTEGER, semester VARCHAR(20), enrollment_date DATE DEFAULT CURRENT_DATE, grade CHAR(2), PRIMARY KEY (student_id, course_id, semester) );
+CREATE TABLE
+postgres=# INSERT INTO course_enrollments (student_id, course_id, semester, grade)
+postgres-# VALUES
+postgres-# (1, 101, '2024-Spring', 'A'),
+postgres-# (1, 102, '2024-Spring', 'B+'),
+postgres-# (2, 101, '2024-Spring', 'A-'),
+postgres-# (1, 101, '2024-Fall', 'A+');
+INSERT 0 4
+postgres=# SELECT * FROM course_enrollments;
+ student_id | course_id |  semester   | enrollment_date | grade
+------------+-----------+-------------+-----------------+-------
+          1 |       101 | 2024-Spring | 2026-10-01      | A
+          1 |       102 | 2024-Spring | 2026-10-01      | B+
+          2 |       101 | 2024-Spring | 2026-10-01      | A-
+          1 |       101 | 2024-Fall   | 2026-10-01      | A+
+(4 rows)
+
+postgres=# INSERT INTO course_enrollments (student_id, course_id, semester, grade)
+postgres-# VALUES
+postgres-# (1, 101, '2024-Spring', 'A-');
+ОШИБКА:  повторяющееся значение ключа нарушает ограничение уникальности "course_enrollments_pkey"
+DETAIL:  Ключ "(student_id, course_id, semester)=(1, 101, 2024-Spring)" уже существует.
+
+INSERT INTO course_enrollments (student_id, course_id, semester, grade)
+postgres-# VALUES
+postgres-# (NULL, 102, '2024-Fall', 'C-');
+ОШИБКА:  значение NULL в столбце "student_id" отношения "course_enrollments" нарушает ограничение NOT NULL
+
+postgres=# \d course_enrollments;
+                       Table "public.course_enrollments"
+     Column      |         Type          | Collation | Nullable |   Default
+-----------------+-----------------------+-----------+----------+--------------
+ student_id      | integer               |           | not null |
+ course_id       | integer               |           | not null |
+ semester        | character varying(20) |           | not null |
+ enrollment_date | date                  |           |          | CURRENT_DATE
+ grade           | character(2)          |           |          |
+Indexes:
+    "course_enrollments_pkey" PRIMARY KEY, btree (student_id, course_id, semester)
