@@ -1,0 +1,63 @@
+CREATE TABLE walls_bad (
+wall_id INT PRIMARY KEY,
+name VARCHAR(100),
+thickness DECIMAL(10,2) DEFAULT 0.00 -- What if the walls are composite and with gaps "0.20, 0.10, 0,20"
+);
+
+CREATE TABLE walls(
+wall_id INT PRIMARY KEY, 
+name VARCHAR(100)
+);
+
+CREATE TABLE walls_properties(
+wall_id INT, 
+material VARCHAR(100), -- Gap type or material composition
+thickness VARCHAR(100), 
+PRIMARY KEY (wall_id, material), 
+FOREIGN KEY (wall_id) REFERENCES walls(wall_id)
+);
+
+CREATE TABLE employees_bad( 
+emp_id INT, 
+section_id INT, 
+purpose VARCHAR(100), -- purpose depends only on section_id, not emp_id
+PRIMARY KEY (emp_id, section_id) 
+);
+
+CREATE TABLE sections( 
+section_id INT PRIMARY KEY, 
+purpose VARCHAR(100)
+);
+
+CREATE TABLE employees( 
+emp_id INT,
+section_id INT,
+PRIMARY KEY (emp_id, section_id), 
+FOREIGN KEY (section_id) REFERENCES sections(section_id)
+);
+
+CREATE TABLE cars_bad(
+car_id INT PRIMARY KEY, 
+owner VARCHAR(100), 
+detail_id INT, 
+detail_name VARCHAR(100) -- detail_name depends on its id which depends on particular car_id
+);
+
+CREATE TABLE details(
+detail_id INT PRIMARY KEY, 
+detail_name VARCHAR(100), 
+manufacture VARCHAR(100) 
+);
+
+CREATE TABLE cars(
+car_id INT PRIMARY KEY, 
+owner VARCHAR(100), 
+FOREIGN KEY detail_id REFERENCES details(detaiL_id)
+);
+
+
+
+
+
+
+
