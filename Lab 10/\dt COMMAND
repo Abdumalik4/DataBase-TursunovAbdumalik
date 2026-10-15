@@ -1,0 +1,21 @@
+postgres=# \dt
+                 List of tables
+ Schema |        Name         | Type  |  Owner
+--------+---------------------+-------+----------
+ public | course_enrollments  | table | postgres
+ public | courses             | table | postgres
+ public | departments         | table | postgres
+ public | employees           | table | postgres
+ public | student_enrollments | table | postgres
+ public | students            | table | postgres
+ public | students_1          | table | postgres
+ public | university_students | table | postgres
+ public | user_profiles       | table | postgres
+ public | users               | table | postgres
+ public | walls               | table | postgres
+ public | walls_bad           | table | postgres
+ public | walls_properties    | table | postgres
+(13 rows)
+
+
+postgres=#
