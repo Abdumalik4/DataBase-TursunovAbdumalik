@@ -1,0 +1,209 @@
+postgres=# SELECT e.first_name, e.last_name, e.salary, d.dept_name, d.manager_name
+postgres-# FROM employees e
+postgres-# INNER JOIN departments d ON e.dept_id = d.dept_id;
+ first_name | last_name  |  salary  |    dept_name     | manager_name
+------------+------------+----------+------------------+--------------
+ Will       | Smith      | 20000.00 | Ecology          | Clide
+ Taylor     | Smith      | 15000.00 | Ecology          | Clide
+ Sam        | Fisher     | 25000.00 | Civic enviroment | Ronald
+ Arthur     | Morgan     | 25000.00 | Civic enviroment | Ronald
+ Jessy      | Pinkman    | 10000.00 | Chemical faculty | Walter
+ White      | Walter     | 50000.00 | Chemical faculty | Walter
+ Johnny     | Silverhand |  5000.00 | Ecology          | Clide
+(7 rows)
+
+postgres=# INSERT INTO employees (first_name, last_name, position, dept_id) VALUES
+postgres-# ('John', 'Doe', 'Dummy', 3);
+
+postgres=# SELECT e.first_name, e.last_name, d.dept_name, d.budget
+postgres-# FROM employees e
+postgres-# LEFT JOIN departments d ON e.dept_id = d.dept_id;
+ first_name | last_name  |    dept_name     |   budget
+------------+------------+------------------+------------
+ Will       | Smith      | Ecology          | 1000000.00
+ Taylor     | Smith      | Ecology          | 1000000.00
+ Sam        | Fisher     | Civic enviroment | 2000000.00
+ Arthur     | Morgan     | Civic enviroment | 2000000.00
+ Jessy      | Pinkman    | Chemical faculty | 3000000.00
+ White      | Walter     | Chemical faculty | 3000000.00
+ Johnny     | Silverhand | Ecology          | 1000000.00
+ John       | Doe        | Chemical faculty | 3000000.00
+(8 rows)
+
+postgres=# SELECT e.first_name, e.salary, d.dept_name, manager_name
+postgres-# FROM employees e
+postgres-# RIGHT JOIN departments d ON e.dept_id = d.dept_id;
+ first_name |  salary  |    dept_name     | manager_name
+------------+----------+------------------+--------------
+ Will       | 20000.00 | Ecology          | Clide
+ Taylor     | 15000.00 | Ecology          | Clide
+ Sam        | 25000.00 | Civic enviroment | Ronald
+ Arthur     | 25000.00 | Civic enviroment | Ronald
+ Jessy      | 10000.00 | Chemical faculty | Walter
+ White      | 50000.00 | Chemical faculty | Walter
+ Johnny     |  5000.00 | Ecology          | Clide
+ John       |          | Chemical faculty | Walter
+(8 rows
+
+postgres=# SELECT e.first_name, e.last_name, e.salary, e.position, d.dept_name, d.budget
+postgres-# FROM employees e
+postgres-# FULL OUTER JOIN departments d ON e.dept_id = d.dept_id;
+ first_name | last_name  |  salary  |      position      |    dept_name     |   budget
+------------+------------+----------+--------------------+------------------+------------
+ Will       | Smith      | 20000.00 | faculty head       | Ecology          | 1000000.00
+ Taylor     | Smith      | 15000.00 | head assitant      | Ecology          | 1000000.00
+ Sam        | Fisher     | 25000.00 | project manager    | Civic enviroment | 2000000.00
+ Arthur     | Morgan     | 25000.00 | project executive  | Civic enviroment | 2000000.00
+ Jessy      | Pinkman    | 10000.00 | chemist-researcher | Chemical faculty | 3000000.00
+ White      | Walter     | 50000.00 | faculty head       | Chemical faculty | 3000000.00
+ Johnny     | Silverhand |  5000.00 | Eco-activist       | Ecology          | 1000000.00
+ John       | Doe        |          | Dummy              | Chemical faculty | 3000000.00
+(8 rows)
+
+postgres=# SELECT e.first_name, d.dept_name
+postgres-# FROM employees e
+postgres-# CROSS JOIN departments d;
+ first_name |    dept_name
+------------+------------------
+ Will       | Ecology
+ Taylor     | Ecology
+ Sam        | Ecology
+ Arthur     | Ecology
+ Jessy      | Ecology
+ White      | Ecology
+ Johnny     | Ecology
+ John       | Ecology
+ Will       | Civic enviroment
+ Taylor     | Civic enviroment
+ Sam        | Civic enviroment
+ Arthur     | Civic enviroment
+ Jessy      | Civic enviroment
+ White      | Civic enviroment
+ Johnny     | Civic enviroment
+ John       | Civic enviroment
+ Will       | Chemical faculty
+ Taylor     | Chemical faculty
+ Sam        | Chemical faculty
+ Arthur     | Chemical faculty
+ Jessy      | Chemical faculty
+ White      | Chemical faculty
+ Johnny     | Chemical faculty
+ John       | Chemical faculty
+(24 rows)
+
+CREATE TABLE targets (
+	target_id SERIAL PRIMARY KEY,
+	dept_id INTEGER REFERENCES departments(dept_id),
+	deadline DATE, 
+	priority VARCHAR(100),
+  target_name VARCHAR(100)
+);
+
+INSERT INTO targets (dept_id, deadline, priority, target_name) VALUES
+(1, '2026-9-15', 'High', 'Pensylvanya Protesters Support'),
+(2, '2028-11-20', 'Medium', 'Clearance maintaining technices'),
+(3, '2026-10-01', 'High', 'Cook'),
+(1, '2030-12-10', 'Low', 'That Lake Problem'),
+(3, '2026-02-01', 'High', 'Recruit an employee'),
+(2, '2029-02-15', 'Low', 'Bike infrastructure Organizing');
+
+postgres=# SELECT e.first_name, e.position, d.manager_name, d.budget, t.target_name, t.priority
+postgres-# FROM employees e
+postgres-# INNER JOIN departments d ON e.dept_id = d.dept_id
+postgres-# INNER JOIN targets t ON t.dept_id = d.dept_id;
+ first_name |      position      | manager_name |   budget   |           target_name           | priority
+------------+--------------------+--------------+------------+---------------------------------+----------
+ Johnny     | Eco-activist       | Clide        | 1000000.00 | Pensylvanya Protesters Support  | High
+ Taylor     | head assitant      | Clide        | 1000000.00 | Pensylvanya Protesters Support  | High
+ Will       | faculty head       | Clide        | 1000000.00 | Pensylvanya Protesters Support  | High
+ Arthur     | project executive  | Ronald       | 2000000.00 | Clearance maintaining technices | Medium
+ Sam        | project manager    | Ronald       | 2000000.00 | Clearance maintaining technices | Medium
+ John       | Dummy              | Walter       | 3000000.00 | Cook                            | High
+ White      | faculty head       | Walter       | 3000000.00 | Cook                            | High
+ Jessy      | chemist-researcher | Walter       | 3000000.00 | Cook                            | High
+ Johnny     | Eco-activist       | Clide        | 1000000.00 | That Lake Problem               | Low
+ Taylor     | head assitant      | Clide        | 1000000.00 | That Lake Problem               | Low
+ Will       | faculty head       | Clide        | 1000000.00 | That Lake Problem               | Low
+ John       | Dummy              | Walter       | 3000000.00 | Recruit an employee             | High
+ White      | faculty head       | Walter       | 3000000.00 | Recruit an employee             | High
+ Jessy      | chemist-researcher | Walter       | 3000000.00 | Recruit an employee             | High
+ Arthur     | project executive  | Ronald       | 2000000.00 | Bike infrastructure Organizing  | Low
+ Sam        | project manager    | Ronald       | 2000000.00 | Bike infrastructure Organizing  | Low
+(16 rows)
+
+postgres=# SELECT e1.first_name AS name, e2.last_name AS surname
+postgres-# FROM employees e1
+postgres-# LEFT JOIN employees e2 ON e1.emp_id = e2.emp_id;
+  name  |  surname
+--------+------------
+ Will   | Smith
+ Taylor | Smith
+ Sam    | Fisher
+ Arthur | Morgan
+ Jessy  | Pinkman
+ White  | Walter
+ Johnny | Silverhand
+ John   | Doe
+(8 rows)
+
+
+postgres=# SELECT e.first_name, e.hire_date, e.salary, d.dept_name
+postgres-# FROM employees e
+postgres-# INNER JOIN departments d ON e.dept_id = d.dept_id
+postgres-# WHERE e.hire_date >= '2015-01-01'
+postgres-# AND salary >= 10000;
+ first_name | hire_date  |  salary  |    dept_name
+------------+------------+----------+------------------
+ Taylor     | 2016-01-23 | 15000.00 | Ecology
+ Arthur     | 2018-01-11 | 25000.00 | Civic enviroment
+ White      | 2019-10-20 | 50000.00 | Chemical faculty
+ Jessy      | 2022-01-30 | 10000.00 | Chemical faculty
+(4 rows)
+
+postgres=# SELECT d.dept_name, t.target_name
+postgres-# FROM departments d
+postgres-# LEFT JOIN targets t ON d.dept_id = t.dept_id
+postgres-# ORDER BY dept_name;
+    dept_name     |           target_name
+------------------+---------------------------------
+ Chemical faculty | Cook
+ Chemical faculty | Recruit an employee
+ Civic enviroment | Clearance maintaining technices
+ Civic enviroment | Bike infrastructure Organizing
+ Ecology          | Pensylvanya Protesters Support
+ Ecology          | That Lake Problem
+(6 rows)
+
+postgres=# SELECT e.first_name, e.position, d.dept_name, d.manager_name, t.target_name
+postgres-# FROM employees e
+postgres-# INNER JOIN targets t ON e.dept_id = t.dept_id
+postgres-# INNER JOIN departments d ON t.dept_id = d.dept_id
+postgres-# ORDER BY e.first_name, t.target_name;
+ first_name |      position      |    dept_name     | manager_name |           target_name
+------------+--------------------+------------------+--------------+---------------------------------
+ Arthur     | project executive  | Civic enviroment | Ronald       | Bike infrastructure Organizing
+ Arthur     | project executive  | Civic enviroment | Ronald       | Clearance maintaining technices
+ Jessy      | chemist-researcher | Chemical faculty | Walter       | Cook
+ Jessy      | chemist-researcher | Chemical faculty | Walter       | Recruit an employee
+ John       | Dummy              | Chemical faculty | Walter       | Cook
+ John       | Dummy              | Chemical faculty | Walter       | Recruit an employee
+ Johnny     | Eco-activist       | Ecology          | Clide        | Pensylvanya Protesters Support
+ Johnny     | Eco-activist       | Ecology          | Clide        | That Lake Problem
+ Sam        | project manager    | Civic enviroment | Ronald       | Bike infrastructure Organizing
+ Sam        | project manager    | Civic enviroment | Ronald       | Clearance maintaining technices
+ Taylor     | head assitant      | Ecology          | Clide        | Pensylvanya Protesters Support
+ Taylor     | head assitant      | Ecology          | Clide        | That Lake Problem
+ White      | faculty head       | Chemical faculty | Walter       | Cook
+ White      | faculty head       | Chemical faculty | Walter       | Recruit an employee
+ Will       | faculty head       | Ecology          | Clide        | Pensylvanya Protesters Support
+ Will       | faculty head       | Ecology          | Clide        | That Lake Problem
+(16 rows)
+
+postgres=# SELECT e.first_name, d.dept_name
+postgres-# FROM employees e
+postgres-# LEFT JOIN departments d ON e.dept_id = d.dept_id
+postgres-# WHERE e.salary IS NULL;
+ first_name |    dept_name
+------------+------------------
+ John       | Chemical faculty
+(1 row)
