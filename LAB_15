@@ -1,0 +1,193 @@
+postgres=# SELECT first_name, last_name, salary
+postgres-# FROM employees
+postgres-# WHERE salary > (
+postgres(#     SELECT AVG(salary)  -- This scalar subquery returns a single value
+postgres(#     FROM employees
+postgres(# );
+ first_name | last_name |  salary
+------------+-----------+----------
+ Sam        | Fisher    | 25000.00
+ Arthur     | Morgan    | 25000.00
+ White      | Walter    | 50000.00
+(3 rows)
+
+postgres=# WITH employees_salary AS (
+postgres(#     SELECT dept_id, SUM(salary) AS total_salary
+postgres(#     FROM employees
+postgres(#     GROUP BY dept_id
+postgres(# )
+postgres-# SELECT dept_id, total_salary
+postgres-# FROM employees_salary;
+ dept_id | total_salary
+---------+--------------
+       3 |     60000.00
+       2 |     50000.00
+       1 |     40000.00
+(3 rows)
+
+UPDATE employees 
+SET manager_id = 2
+WHERE emp_id = 4;
+
+postgres=# WITH RECURSIVE org_chart AS (
+postgres(#     SELECT emp_id, first_name, last_name, manager_id
+postgres(#     FROM employees
+postgres(#     WHERE manager_id IS NULL
+postgres(#     UNION ALL
+postgres(#     SELECT e.emp_id, e.first_name, e.last_name, e.manager_id
+postgres(#     FROM employees e
+postgres(#     INNER JOIN org_chart oc ON e.manager_id = oc.emp_id
+postgres(# )
+postgres-# SELECT * FROM org_chart;
+ emp_id | first_name | last_name  | manager_id
+--------+------------+------------+------------
+      1 | Will       | Smith      |
+      3 | Sam        | Fisher     |
+      6 | White      | Walter     |
+      5 | Jessy      | Pinkman    |          6
+     11 | John       | Doe        |          6
+      2 | Taylor     | Smith      |          1
+      4 | Arthur     | Morgan     |          3
+      7 | Johnny     | Silverhand |          1
+(8 rows)
+
+CREATE TABLE warehouse_1 (
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(100),
+    quantity INTEGER
+);
+CREATE TABLE warehouse_2 (
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(100),
+    quantity INTEGER
+);
+INSERT INTO warehouse_1 (product_name, quantity)
+VALUES
+('Laptop', 10),
+('Phone', 6),
+('Keyboard', 15),
+('Mouse', 2),
+('Monitor', 8);
+INSERT INTO warehouse_2 (product_name, quantity)
+VALUES
+('Laptop', 5),
+('Phone', 1),
+('Mouse', 12),
+('Printer', 7),
+('Tablet', 3);
+
+postgres=# SELECT product_name FROM warehouse_1
+postgres-# UNION
+postgres-# SELECT product_name FROM warehouse_2;
+ product_name
+--------------
+ Printer
+ Mouse
+ Tablet
+ Laptop
+ Keyboard
+ Monitor
+ Phone
+(7 rows)
+
+postgres=# SELECT
+postgres-#     first_name,
+postgres-#     last_name,
+postgres-#     dept_id,
+postgres-#     salary,
+postgres-#     RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS dept_salary_rank
+postgres-# FROM employees;
+ first_name | last_name  | dept_id |  salary  | dept_salary_rank
+------------+------------+---------+----------+------------------
+ Will       | Smith      |       1 | 20000.00 |                1
+ Taylor     | Smith      |       1 | 15000.00 |                2
+ Johnny     | Silverhand |       1 |  5000.00 |                3
+ Arthur     | Morgan     |       2 | 25000.00 |                1
+ Sam        | Fisher     |       2 | 25000.00 |                1
+ John       | Doe        |       3 |          |                1
+ White      | Walter     |       3 | 50000.00 |                2
+ Jessy      | Pinkman    |       3 | 10000.00 |                3
+(8 rows)
+
+postgres=# SELECT
+postgres-#     dept_id,
+postgres-#     SUM(CASE WHEN dept_id = 1 THEN salary ELSE 0 END) AS salary_dept_1,
+postgres-#     SUM(CASE WHEN dept_id = 2 THEN salary ELSE 0 END) AS salary_dept_2,
+postgres-#     SUM(CASE WHEN dept_id = 3 THEN salary ELSE 0 END) AS salary_dept_3
+postgres-# FROM employees
+postgres-# GROUP BY dept_id;
+ dept_id | salary_dept_1 | salary_dept_2 | salary_dept_3
+---------+---------------+---------------+---------------
+       3 |             0 |             0 |      60000.00
+       2 |             0 |      50000.00 |             0
+       1 |      40000.00 |             0 |             0
+(3 rows)
+
+
+postgres=# SELECT
+postgres-#     first_name,
+postgres-#     'salary' AS attribute,
+postgres-#     salary AS value
+postgres-# FROM employees
+postgres-# UNION ALL
+postgres-# SELECT
+postgres-#     first_name,
+postgres-#     'experience' AS attribute,
+postgres-#     experience AS value
+postgres-# FROM employees
+postgres-# ORDER BY first_name, attribute;
+ first_name | attribute  |  value
+------------+------------+----------
+ Arthur     | experience |       15
+ Arthur     | salary     | 25000.00
+ Jessy      | experience |        5
+ Jessy      | salary     | 10000.00
+ John       | experience |
+ John       | salary     |
+ Johnny     | experience |        2
+ Johnny     | salary     |  5000.00
+ Sam        | experience |        5
+ Sam        | salary     | 25000.00
+ Taylor     | experience |        7
+ Taylor     | salary     | 15000.00
+ White      | experience |       20
+ White      | salary     | 50000.00
+ Will       | experience |       10
+ Will       | salary     | 20000.00
+(16 rows)
+
+postgres=# SELECT
+postgres-#     emp_id,
+postgres-#     SUM(salary) OVER (PARTITION BY dept_id) AS total_dept_salary,
+postgres-#     AVG(salary) FILTER (WHERE experience > 10) OVER () AS avg_salary_senior
+postgres-# FROM employees;
+ emp_id | total_dept_salary | avg_salary_senior
+--------+-------------------+--------------------
+      1 |          40000.00 | 37500.000000000000
+      2 |          40000.00 | 37500.000000000000
+      7 |          40000.00 | 37500.000000000000
+      4 |          50000.00 | 37500.000000000000
+      3 |          50000.00 | 37500.000000000000
+      6 |          60000.00 | 37500.000000000000
+     11 |          60000.00 | 37500.000000000000
+      5 |          60000.00 | 37500.000000000000
+(8 rows)
+
+postgres=# SELECT target_name, priority
+postgres-# FROM targets
+postgres-# ORDER BY
+postgres-#     CASE priority
+postgres-#         WHEN 'High' THEN 1
+postgres-#         WHEN 'Medium' THEN 2
+postgres-#         WHEN 'Low' THEN 3
+postgres-#         ELSE 4
+postgres-#     END;
+           target_name           | priority
+---------------------------------+----------
+ Pensylvanya Protesters Support  | High
+ Cook                            | High
+ Recruit an employee             | High
+ Clearance maintaining technices | Medium
+ That Lake Problem               | Low
+ Bike infrastructure Organizing  | Low
+(6 rows)
