@@ -1,0 +1,4 @@
+postgres=# \copy accounts TO 'C:\Users\trsnv\Desktop\copies\accounts.csv' WITH CSV HEADER;
+COPY 6
+
+-- The screenshot Copy_accounts is the evidence of the copy --
