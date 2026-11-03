@@ -69,7 +69,656 @@ Password for user postgres:
       6 | Joel    | 1800.00
 (6 rows)
 
--- The screenshot of the existence of the backup is provided in file backup.png --
+-- The screenshot of the existence of the backup is provided in file Backup.png --
+
+
+
+
+
+PS C:\WINDOWS\system32> $env:Path += ";C:\Program Files\PostgreSQL\18\bin"
+PS C:\WINDOWS\system32> mkdir C:\pgbackup
+
+
+    Directory: C:\
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         03-Nov-26   5:08 PM                pgbackup
+
+
+PS C:\WINDOWS\system32> cd C:\pgbackup
+PS C:\pgbackup> pg_dumpall -U postgres -f full_cluster_backup.sql
+Password:
+
+PS C:\pgbackup> pg_dump -U postgres -d postgres -Fc --verbose -f full_db_backup.dump
+Password:
+
+pg_dump: executing SELECT pg_catalog.set_config('search_path', '', false);
+pg_dump: last built-in OID is 16383
+pg_dump: reading extensions
+pg_dump: identifying extension members
+pg_dump: reading schemas
+pg_dump: reading user-defined tables
+pg_dump: reading user-defined functions
+pg_dump: reading user-defined types
+pg_dump: reading procedural languages
+pg_dump: reading user-defined aggregate functions
+pg_dump: reading user-defined operators
+pg_dump: reading user-defined access methods
+pg_dump: reading user-defined operator classes
+pg_dump: reading user-defined operator families
+pg_dump: reading user-defined text search parsers
+pg_dump: reading user-defined text search templates
+pg_dump: reading user-defined text search dictionaries
+pg_dump: reading user-defined text search configurations
+pg_dump: reading user-defined foreign-data wrappers
+pg_dump: reading user-defined foreign servers
+pg_dump: reading default privileges
+pg_dump: reading user-defined collations
+pg_dump: reading user-defined conversions
+pg_dump: reading type casts
+pg_dump: reading transforms
+pg_dump: reading table inheritance information
+pg_dump: reading event triggers
+pg_dump: finding extension tables
+pg_dump: finding inheritance relationships
+pg_dump: reading column info for interesting tables
+pg_dump: finding table default expressions
+pg_dump: finding table check constraints
+pg_dump: flagging inherited columns in subtables
+pg_dump: reading partitioning data
+pg_dump: reading indexes
+pg_dump: flagging indexes in partitioned tables
+pg_dump: reading extended statistics
+pg_dump: reading constraints
+pg_dump: reading triggers
+pg_dump: reading rewrite rules
+pg_dump: reading policies
+pg_dump: reading row-level security policies
+pg_dump: reading publications
+pg_dump: reading publication membership of tables
+pg_dump: reading publication membership of schemas
+pg_dump: reading subscriptions
+pg_dump: reading subscription membership of tables
+pg_dump: reading large objects
+pg_dump: reading dependency data
+pg_dump: saving encoding = UTF8
+pg_dump: saving "standard_conforming_strings = on"
+pg_dump: saving "search_path = "
+pg_dump: saving database definition
+pg_dump: dumping contents of table "public.accounts"
+pg_dump: dumping contents of table "public.course_enrollments"
+pg_dump: dumping contents of table "public.courses"
+pg_dump: dumping contents of table "public.departments"
+pg_dump: dumping contents of table "public.employees"
+pg_dump: dumping contents of table "public.expendances"
+pg_dump: dumping contents of table "public.student_enrollments"
+pg_dump: dumping contents of table "public.students"
+pg_dump: dumping contents of table "public.students_1"
+pg_dump: dumping contents of table "public.targets"
+pg_dump: dumping contents of table "public.university_students"
+pg_dump: dumping contents of table "public.user_profiles"
+pg_dump: dumping contents of table "public.users"
+pg_dump: dumping contents of table "public.walls"
+pg_dump: dumping contents of table "public.walls_bad"
+pg_dump: dumping contents of table "public.walls_properties"
+pg_dump: dumping contents of table "public.warehouse_1"
+pg_dump: dumping contents of table "public.warehouse_2"
+PS C:\pgbackup> pg_dump -U postgres -d postgres -Fc -O -f backup_no_owner.dump
+Password:
+
+PS C:\pgbackup> Get-ChildItem C:\pgbackup
+
+
+    Directory: C:\pgbackup
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         03-Nov-26   5:09 PM          41738 backup_no_owner.dump
+-a----         03-Nov-26   5:08 PM          62761 full_cluster_backup.sql
+-a----         03-Nov-26   5:09 PM          41738 full_db_backup.dump
+
+
+PS C:\pgbackup> pg_restore --list full_db_backup.dump
+;
+; Archive created at 2026-11-03 17:08:48
+;     dbname: postgres
+;     TOC Entries: 127
+;     Compression: gzip
+;     Dump Version: 1.16-0
+;     Format: CUSTOM
+;     Integer: 4 bytes
+;     Offset: 8 bytes
+;     Dumped from database version: 18.6
+;     Dumped by pg_dump version: 18.6
+;
+;
+; Selected TOC Entries:
+;
+249; 1259 16788 TABLE public accounts postgres
+223; 1259 16485 TABLE public course_enrollments postgres
+231; 1259 16639 TABLE public courses postgres
+230; 1259 16638 SEQUENCE public courses_course_id_seq postgres
+5203; 0 0 SEQUENCE OWNED BY public courses_course_id_seq postgres
+240; 1259 16714 TABLE public departments postgres
+239; 1259 16713 SEQUENCE public departments_dept_id_seq postgres
+5204; 0 0 SEQUENCE OWNED BY public departments_dept_id_seq postgres
+242; 1259 16723 TABLE public employees postgres
+241; 1259 16722 SEQUENCE public employees_emp_id_seq postgres
+5205; 0 0 SEQUENCE OWNED BY public employees_emp_id_seq postgres
+238; 1259 16700 TABLE public expendances postgres
+237; 1259 16699 SEQUENCE public expendances_emp_id_seq postgres
+5206; 0 0 SEQUENCE OWNED BY public expendances_emp_id_seq postgres
+233; 1259 16652 TABLE public student_enrollments postgres
+232; 1259 16651 SEQUENCE public student_enrollments_enrollment_id_seq postgres
+5207; 0 0 SEQUENCE OWNED BY public student_enrollments_enrollment_id_seq postgres
+229; 1259 16626 TABLE public students postgres
+222; 1259 16472 TABLE public students_1 postgres
+221; 1259 16471 SEQUENCE public students_1_student_id_seq postgres
+5208; 0 0 SEQUENCE OWNED BY public students_1_student_id_seq postgres
+228; 1259 16625 SEQUENCE public students_student_id_seq postgres
+5209; 0 0 SEQUENCE OWNED BY public students_student_id_seq postgres
+244; 1259 16755 TABLE public targets postgres
+243; 1259 16754 SEQUENCE public targets_target_id_seq postgres
+5210; 0 0 SEQUENCE OWNED BY public targets_target_id_seq postgres
+220; 1259 16439 TABLE public university_students postgres
+219; 1259 16438 SEQUENCE public test_table_student_id_seq postgres
+5211; 0 0 SEQUENCE OWNED BY public test_table_student_id_seq postgres
+227; 1259 16608 TABLE public user_profiles postgres
+226; 1259 16607 SEQUENCE public user_profiles_profile_id_seq postgres
+5212; 0 0 SEQUENCE OWNED BY public user_profiles_profile_id_seq postgres
+225; 1259 16593 TABLE public users postgres
+224; 1259 16592 SEQUENCE public users_user_id_seq postgres
+5213; 0 0 SEQUENCE OWNED BY public users_user_id_seq postgres
+235; 1259 16681 TABLE public walls postgres
+234; 1259 16674 TABLE public walls_bad postgres
+236; 1259 16687 TABLE public walls_properties postgres
+246; 1259 16773 TABLE public warehouse_1 postgres
+245; 1259 16772 SEQUENCE public warehouse_1_product_id_seq postgres
+5214; 0 0 SEQUENCE OWNED BY public warehouse_1_product_id_seq postgres
+248; 1259 16781 TABLE public warehouse_2 postgres
+247; 1259 16780 SEQUENCE public warehouse_2_product_id_seq postgres
+5215; 0 0 SEQUENCE OWNED BY public warehouse_2_product_id_seq postgres
+4945; 2604 16642 DEFAULT public courses course_id postgres
+4950; 2604 16717 DEFAULT public departments dept_id postgres
+4951; 2604 16726 DEFAULT public employees emp_id postgres
+4949; 2604 16703 DEFAULT public expendances emp_id postgres
+4946; 2604 16655 DEFAULT public student_enrollments enrollment_id postgres
+4943; 2604 16629 DEFAULT public students student_id postgres
+4937; 2604 16475 DEFAULT public students_1 student_id postgres
+4953; 2604 16758 DEFAULT public targets target_id postgres
+4936; 2604 16442 DEFAULT public university_students student_id postgres
+4942; 2604 16611 DEFAULT public user_profiles profile_id postgres
+4940; 2604 16596 DEFAULT public users user_id postgres
+4954; 2604 16776 DEFAULT public warehouse_1 product_id postgres
+4955; 2604 16784 DEFAULT public warehouse_2 product_id postgres
+5195; 0 16788 TABLE DATA public accounts postgres
+5169; 0 16485 TABLE DATA public course_enrollments postgres
+5177; 0 16639 TABLE DATA public courses postgres
+5186; 0 16714 TABLE DATA public departments postgres
+5188; 0 16723 TABLE DATA public employees postgres
+5184; 0 16700 TABLE DATA public expendances postgres
+5179; 0 16652 TABLE DATA public student_enrollments postgres
+5175; 0 16626 TABLE DATA public students postgres
+5168; 0 16472 TABLE DATA public students_1 postgres
+5190; 0 16755 TABLE DATA public targets postgres
+5166; 0 16439 TABLE DATA public university_students postgres
+5173; 0 16608 TABLE DATA public user_profiles postgres
+5171; 0 16593 TABLE DATA public users postgres
+5181; 0 16681 TABLE DATA public walls postgres
+5180; 0 16674 TABLE DATA public walls_bad postgres
+5182; 0 16687 TABLE DATA public walls_properties postgres
+5192; 0 16773 TABLE DATA public warehouse_1 postgres
+5194; 0 16781 TABLE DATA public warehouse_2 postgres
+5216; 0 0 SEQUENCE SET public courses_course_id_seq postgres
+5217; 0 0 SEQUENCE SET public departments_dept_id_seq postgres
+5218; 0 0 SEQUENCE SET public employees_emp_id_seq postgres
+5219; 0 0 SEQUENCE SET public expendances_emp_id_seq postgres
+5220; 0 0 SEQUENCE SET public student_enrollments_enrollment_id_seq postgres
+5221; 0 0 SEQUENCE SET public students_1_student_id_seq postgres
+5222; 0 0 SEQUENCE SET public students_student_id_seq postgres
+5223; 0 0 SEQUENCE SET public targets_target_id_seq postgres
+5224; 0 0 SEQUENCE SET public test_table_student_id_seq postgres
+5225; 0 0 SEQUENCE SET public user_profiles_profile_id_seq postgres
+5226; 0 0 SEQUENCE SET public users_user_id_seq postgres
+5227; 0 0 SEQUENCE SET public warehouse_1_product_id_seq postgres
+5228; 0 0 SEQUENCE SET public warehouse_2_product_id_seq postgres
+5010; 2606 16794 CONSTRAINT public accounts accounts_pkey postgres
+4966; 2606 16493 CONSTRAINT public course_enrollments course_enrollments_pkey postgres
+4982; 2606 16650 CONSTRAINT public courses courses_course_code_key postgres
+4984; 2606 16648 CONSTRAINT public courses courses_pkey postgres
+5000; 2606 16721 CONSTRAINT public departments departments_pkey postgres
+5002; 2606 16733 CONSTRAINT public employees employees_pkey postgres
+4996; 2606 16709 CONSTRAINT public expendances expendances_pkey postgres
+4998; 2606 16711 CONSTRAINT public expendances expendances_post_key postgres
+4986; 2606 16661 CONSTRAINT public student_enrollments student_enrollments_pkey postgres
+4988; 2606 16663 CONSTRAINT public student_enrollments student_enrollments_student_id_course_id_key postgres
+4962; 2606 16481 CONSTRAINT public students_1 students_1_email_key postgres
+4964; 2606 16479 CONSTRAINT public students_1 students_1_pkey postgres
+4978; 2606 16637 CONSTRAINT public students students_email_key postgres
+4980; 2606 16635 CONSTRAINT public students students_pkey postgres
+5004; 2606 16761 CONSTRAINT public targets targets_pkey postgres
+4958; 2606 16448 CONSTRAINT public university_students test_table_pkey postgres
+4960; 2606 16455 CONSTRAINT public university_students unique_student_first_name postgres
+4974; 2606 16617 CONSTRAINT public user_profiles user_profiles_pkey postgres
+4976; 2606 16619 CONSTRAINT public user_profiles user_profiles_user_id_key postgres
+4968; 2606 16606 CONSTRAINT public users users_email_key postgres
+4970; 2606 16602 CONSTRAINT public users users_pkey postgres
+4972; 2606 16604 CONSTRAINT public users users_username_key postgres
+4990; 2606 16680 CONSTRAINT public walls_bad walls_bad_pkey postgres
+4992; 2606 16686 CONSTRAINT public walls walls_pkey postgres
+4994; 2606 16693 CONSTRAINT public walls_properties walls_properties_pkey postgres
+5006; 2606 16779 CONSTRAINT public warehouse_1 warehouse_1_pkey postgres
+5008; 2606 16787 CONSTRAINT public warehouse_2 warehouse_2_pkey postgres
+5015; 2606 16734 FK CONSTRAINT public employees employees_dept_id_fkey postgres
+5016; 2606 16767 FK CONSTRAINT public employees fk_manager postgres
+5012; 2606 16669 FK CONSTRAINT public student_enrollments student_enrollments_course_id_fkey postgres
+5013; 2606 16664 FK CONSTRAINT public student_enrollments student_enrollments_student_id_fkey postgres
+5017; 2606 16762 FK CONSTRAINT public targets targets_dept_id_fkey postgres
+5011; 2606 16620 FK CONSTRAINT public user_profiles user_profiles_user_id_fkey postgres
+5014; 2606 16694 FK CONSTRAINT public walls_properties walls_properties_wall_id_fkey postgres
+PS C:\pgbackup> $LASTEXITCODE
+0
+
+
+
+
+
+
+
+PS C:\pgbackup> psql -U postgres -d postgres -c "SHOW config_file;"
+Password for user postgres:
+
+                     config_file
+-----------------------------------------------------
+ C:/Program Files/PostgreSQL/18/data/postgresql.conf
+(1 row)
+
+
+PS C:\pgbackup> psql -U postgres -d postgres -c "SHOW data_directory;"
+Password for user postgres:
+
+           data_directory
+-------------------------------------
+ C:/Program Files/PostgreSQL/18/data
+(1 row)
+
+
+PS C:\pgbackup> New-Item -ItemType Directory -Force -Path C:\pgbackup\wal
+
+
+    Directory: C:\pgbackup
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         03-Nov-26   5:18 PM                wal
+
+
+PS C:\pgbackup> New-Item -ItemType Directory -Force -Path C:\pgbackup\base
+
+
+    Directory: C:\pgbackup
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         03-Nov-26   5:18 PM                base
+
+
+
+
+-- After I have set the required properties in the notepad for backups. --
+-- Those command are: --
+-- wal_level = replica -- 
+-- archive_mode = on --
+-- archive_command = 'copy "%p" "C:/pgbackup/wal/%f"' --
+
+
+PS C:\WINDOWS\system32> psql -U postgres -d postgres -c "SHOW wal_level;"
+Password for user postgres:
+
+ wal_level
+-----------
+ replica
+(1 row)
+
+
+PS C:\WINDOWS\system32> psql -U postgres -d postgres -c "SHOW archive_mode;"
+Password for user postgres:
+
+ archive_mode
+--------------
+ on
+(1 row)
+
+
+PS C:\WINDOWS\system32> psql -U postgres -d postgres -c "SHOW archive_command;"
+Password for user postgres:
+
+        archive_command
+--------------------------------
+ copy "%p" "C:/pgbackup/wal/%f"
+(1 row)
+
+
+PS C:\WINDOWS\system32> New-Item -ItemType Directory -Force -Path C:\pgbackup\base
+>> New-Item -ItemType Directory -Force -Path C:\pgbackup\wal
+
+
+    Directory: C:\pgbackup
+
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         03-Nov-26   5:18 PM                base
+d-----         03-Nov-26   5:18 PM                wal
+
+
+PS C:\WINDOWS\system32> pg_basebackup -U postgres -D "C:\pgbackup\base" -F t -z -P -X stream
+Password:
+
+34720/34720 kB (100%), 1/1 tablespace
+PS C:\WINDOWS\system32> Get-ChildItem C:\pgbackup\base
+
+
+    Directory: C:\pgbackup\base
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         03-Nov-26   5:37 PM         204364 backup_manifest
+-a----         03-Nov-26   5:37 PM        4488883 base.tar.gz
+-a----         03-Nov-26   5:37 PM          17113 pg_wal.tar.gz
+
+
+PS C:\WINDOWS\system32> $LASTEXITCODE
+0
+
+-- Backup finished --
+
+PS C:\WINDOWS\system32> psql -U postgres -d postgres -c "SELECT pg_switch_wal();"
+Password for user postgres:
+
+ pg_switch_wal
+---------------
+ 0/6000078
+(1 row)
+
+
+PS C:\WINDOWS\system32> psql -U postgres -d postgres -c "SELECT archived_count, failed_count, last_archived_wal, last_failed_wal FROM pg_stat_archiver;"
+Password for user postgres:
+
+ archived_count | failed_count |    last_archived_wal     | last_failed_wal
+----------------+--------------+--------------------------+-----------------
+              4 |            0 | 000000010000000000000006 |
+(1 row)
+
+
+PS C:\WINDOWS\system32> Get-ChildItem C:\pgbackup\wal
+
+
+    Directory: C:\pgbackup\wal
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         03-Nov-26   5:37 PM       16777216 000000010000000000000004
+-a----         03-Nov-26   5:37 PM       16777216 000000010000000000000005
+-a----         03-Nov-26   5:37 PM            338 000000010000000000000005.00000060.backup
+-a----         03-Nov-26   5:39 PM       16777216 000000010000000000000006
+
+
+
+-- SIMPLE MIGRATION STRAT 1 --
+
+
+
+PS C:\pgmigration> pg_dump -U postgres -d postgres -Fc -v -f migration.dump
+Password:
+
+pg_dump: executing SELECT pg_catalog.set_config('search_path', '', false);
+pg_dump: last built-in OID is 16383
+pg_dump: reading extensions
+pg_dump: identifying extension members
+pg_dump: reading schemas
+pg_dump: reading user-defined tables
+pg_dump: reading user-defined functions
+pg_dump: reading user-defined types
+pg_dump: reading procedural languages
+pg_dump: reading user-defined aggregate functions
+pg_dump: reading user-defined operators
+pg_dump: reading user-defined access methods
+pg_dump: reading user-defined operator classes
+pg_dump: reading user-defined operator families
+pg_dump: reading user-defined text search parsers
+pg_dump: reading user-defined text search templates
+pg_dump: reading user-defined text search dictionaries
+pg_dump: reading user-defined text search configurations
+pg_dump: reading user-defined foreign-data wrappers
+pg_dump: reading user-defined foreign servers
+pg_dump: reading default privileges
+pg_dump: reading user-defined collations
+pg_dump: reading user-defined conversions
+pg_dump: reading type casts
+pg_dump: reading transforms
+pg_dump: reading table inheritance information
+pg_dump: reading event triggers
+pg_dump: finding extension tables
+pg_dump: finding inheritance relationships
+pg_dump: reading column info for interesting tables
+pg_dump: finding table default expressions
+pg_dump: finding table check constraints
+pg_dump: flagging inherited columns in subtables
+pg_dump: reading partitioning data
+pg_dump: reading indexes
+pg_dump: flagging indexes in partitioned tables
+pg_dump: reading extended statistics
+pg_dump: reading constraints
+pg_dump: reading triggers
+pg_dump: reading rewrite rules
+pg_dump: reading policies
+pg_dump: reading row-level security policies
+pg_dump: reading publications
+pg_dump: reading publication membership of tables
+pg_dump: reading publication membership of schemas
+pg_dump: reading subscriptions
+pg_dump: reading subscription membership of tables
+pg_dump: reading large objects
+pg_dump: reading dependency data
+pg_dump: saving encoding = UTF8
+pg_dump: saving "standard_conforming_strings = on"
+pg_dump: saving "search_path = "
+pg_dump: saving database definition
+pg_dump: dumping contents of table "public.accounts"
+pg_dump: dumping contents of table "public.course_enrollments"
+pg_dump: dumping contents of table "public.courses"
+pg_dump: dumping contents of table "public.departments"
+pg_dump: dumping contents of table "public.employees"
+pg_dump: dumping contents of table "public.expendances"
+pg_dump: dumping contents of table "public.student_enrollments"
+pg_dump: dumping contents of table "public.students"
+pg_dump: dumping contents of table "public.students_1"
+pg_dump: dumping contents of table "public.targets"
+pg_dump: dumping contents of table "public.university_students"
+pg_dump: dumping contents of table "public.user_profiles"
+pg_dump: dumping contents of table "public.users"
+pg_dump: dumping contents of table "public.walls"
+pg_dump: dumping contents of table "public.walls_bad"
+pg_dump: dumping contents of table "public.walls_properties"
+pg_dump: dumping contents of table "public.warehouse_1"
+pg_dump: dumping contents of table "public.warehouse_2"
+PS C:\pgmigration> $LASTEXITCODE
+0
+PS C:\pgmigration> Get-ChildItem C:\pgmigration
+
+
+    Directory: C:\pgmigration
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         03-Nov-26   5:48 PM          41738 migration.dump
+
+
+
+PS C:\pgmigration> createdb -U postgres migration_db
+Password:
+
+PS C:\pgmigration> psql -U postgres -l
+Password for user postgres:
+
+                                                               List of databases
+     Name     |  Owner   | Encoding | Locale Provider |       Collate       |        Ctype        | Locale | ICU Rules |   Access privileges
+--------------+----------+----------+-----------------+---------------------+---------------------+--------+-----------+-----------------------
+ migration_db | postgres | UTF8     | libc            | Russian_Russia.1251 | Russian_Russia.1251 |        |           | --  HERE IT IS! --
+ postgres     | postgres | UTF8     | libc            | Russian_Russia.1251 | Russian_Russia.1251 |        |           |
+ template0    | postgres | UTF8     | libc            | Russian_Russia.1251 | Russian_Russia.1251 |        |           | =c/postgres          +
+              |          |          |                 |                     |                     |        |           | postgres=CTc/postgres
+ template1    | postgres | UTF8     | libc            | Russian_Russia.1251 | Russian_Russia.1251 |        |           | =c/postgres          +
+              |          |          |                 |                     |                     |        |           | postgres=CTc/postgres
+ test_restore | postgres | UTF8     | libc            | Russian_Russia.1251 | Russian_Russia.1251 |        |           |
+(5 rows)
+
+
+PS C:\pgmigration> pg_restore -U postgres -d migration_db -v migration.dump
+pg_restore: connecting to database for restore
+Password:
+
+pg_restore: executing SELECT pg_catalog.set_config('search_path', '', false);
+pg_restore: creating TABLE "public.accounts"
+pg_restore: creating TABLE "public.course_enrollments"
+pg_restore: creating TABLE "public.courses"
+pg_restore: creating SEQUENCE "public.courses_course_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.courses_course_id_seq"
+pg_restore: creating TABLE "public.departments"
+pg_restore: creating SEQUENCE "public.departments_dept_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.departments_dept_id_seq"
+pg_restore: creating TABLE "public.employees"
+pg_restore: creating SEQUENCE "public.employees_emp_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.employees_emp_id_seq"
+pg_restore: creating TABLE "public.expendances"
+pg_restore: creating SEQUENCE "public.expendances_emp_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.expendances_emp_id_seq"
+pg_restore: creating TABLE "public.student_enrollments"
+pg_restore: creating SEQUENCE "public.student_enrollments_enrollment_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.student_enrollments_enrollment_id_seq"
+pg_restore: creating TABLE "public.students"
+pg_restore: creating TABLE "public.students_1"
+pg_restore: creating SEQUENCE "public.students_1_student_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.students_1_student_id_seq"
+pg_restore: creating SEQUENCE "public.students_student_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.students_student_id_seq"
+pg_restore: creating TABLE "public.targets"
+pg_restore: creating SEQUENCE "public.targets_target_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.targets_target_id_seq"
+pg_restore: creating TABLE "public.university_students"
+pg_restore: creating SEQUENCE "public.test_table_student_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.test_table_student_id_seq"
+pg_restore: creating TABLE "public.user_profiles"
+pg_restore: creating SEQUENCE "public.user_profiles_profile_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.user_profiles_profile_id_seq"
+pg_restore: creating TABLE "public.users"
+pg_restore: creating SEQUENCE "public.users_user_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.users_user_id_seq"
+pg_restore: creating TABLE "public.walls"
+pg_restore: creating TABLE "public.walls_bad"
+pg_restore: creating TABLE "public.walls_properties"
+pg_restore: creating TABLE "public.warehouse_1"
+pg_restore: creating SEQUENCE "public.warehouse_1_product_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.warehouse_1_product_id_seq"
+pg_restore: creating TABLE "public.warehouse_2"
+pg_restore: creating SEQUENCE "public.warehouse_2_product_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.warehouse_2_product_id_seq"
+pg_restore: creating DEFAULT "public.courses course_id"
+pg_restore: creating DEFAULT "public.departments dept_id"
+pg_restore: creating DEFAULT "public.employees emp_id"
+pg_restore: creating DEFAULT "public.expendances emp_id"
+pg_restore: creating DEFAULT "public.student_enrollments enrollment_id"
+pg_restore: creating DEFAULT "public.students student_id"
+pg_restore: creating DEFAULT "public.students_1 student_id"
+pg_restore: creating DEFAULT "public.targets target_id"
+pg_restore: creating DEFAULT "public.university_students student_id"
+pg_restore: creating DEFAULT "public.user_profiles profile_id"
+pg_restore: creating DEFAULT "public.users user_id"
+pg_restore: creating DEFAULT "public.warehouse_1 product_id"
+pg_restore: creating DEFAULT "public.warehouse_2 product_id"
+pg_restore: processing data for table "public.accounts"
+pg_restore: processing data for table "public.course_enrollments"
+pg_restore: processing data for table "public.courses"
+pg_restore: processing data for table "public.departments"
+pg_restore: processing data for table "public.employees"
+pg_restore: processing data for table "public.expendances"
+pg_restore: processing data for table "public.student_enrollments"
+pg_restore: processing data for table "public.students"
+pg_restore: processing data for table "public.students_1"
+pg_restore: processing data for table "public.targets"
+pg_restore: processing data for table "public.university_students"
+pg_restore: processing data for table "public.user_profiles"
+pg_restore: processing data for table "public.users"
+pg_restore: processing data for table "public.walls"
+pg_restore: processing data for table "public.walls_bad"
+pg_restore: processing data for table "public.walls_properties"
+pg_restore: processing data for table "public.warehouse_1"
+pg_restore: processing data for table "public.warehouse_2"
+pg_restore: executing SEQUENCE SET courses_course_id_seq
+pg_restore: executing SEQUENCE SET departments_dept_id_seq
+pg_restore: executing SEQUENCE SET employees_emp_id_seq
+pg_restore: executing SEQUENCE SET expendances_emp_id_seq
+pg_restore: executing SEQUENCE SET student_enrollments_enrollment_id_seq
+pg_restore: executing SEQUENCE SET students_1_student_id_seq
+pg_restore: executing SEQUENCE SET students_student_id_seq
+pg_restore: executing SEQUENCE SET targets_target_id_seq
+pg_restore: executing SEQUENCE SET test_table_student_id_seq
+pg_restore: executing SEQUENCE SET user_profiles_profile_id_seq
+pg_restore: executing SEQUENCE SET users_user_id_seq
+pg_restore: executing SEQUENCE SET warehouse_1_product_id_seq
+pg_restore: executing SEQUENCE SET warehouse_2_product_id_seq
+pg_restore: creating CONSTRAINT "public.accounts accounts_pkey"
+pg_restore: creating CONSTRAINT "public.course_enrollments course_enrollments_pkey"
+pg_restore: creating CONSTRAINT "public.courses courses_course_code_key"
+pg_restore: creating CONSTRAINT "public.courses courses_pkey"
+pg_restore: creating CONSTRAINT "public.departments departments_pkey"
+pg_restore: creating CONSTRAINT "public.employees employees_pkey"
+pg_restore: creating CONSTRAINT "public.expendances expendances_pkey"
+pg_restore: creating CONSTRAINT "public.expendances expendances_post_key"
+pg_restore: creating CONSTRAINT "public.student_enrollments student_enrollments_pkey"
+pg_restore: creating CONSTRAINT "public.student_enrollments student_enrollments_student_id_course_id_key"
+pg_restore: creating CONSTRAINT "public.students_1 students_1_email_key"
+pg_restore: creating CONSTRAINT "public.students_1 students_1_pkey"
+pg_restore: creating CONSTRAINT "public.students students_email_key"
+pg_restore: creating CONSTRAINT "public.students students_pkey"
+pg_restore: creating CONSTRAINT "public.targets targets_pkey"
+pg_restore: creating CONSTRAINT "public.university_students test_table_pkey"
+pg_restore: creating CONSTRAINT "public.university_students unique_student_first_name"
+pg_restore: creating CONSTRAINT "public.user_profiles user_profiles_pkey"
+pg_restore: creating CONSTRAINT "public.user_profiles user_profiles_user_id_key"
+pg_restore: creating CONSTRAINT "public.users users_email_key"
+pg_restore: creating CONSTRAINT "public.users users_pkey"
+pg_restore: creating CONSTRAINT "public.users users_username_key"
+pg_restore: creating CONSTRAINT "public.walls_bad walls_bad_pkey"
+pg_restore: creating CONSTRAINT "public.walls walls_pkey"
+pg_restore: creating CONSTRAINT "public.walls_properties walls_properties_pkey"
+pg_restore: creating CONSTRAINT "public.warehouse_1 warehouse_1_pkey"
+pg_restore: creating CONSTRAINT "public.warehouse_2 warehouse_2_pkey"
+pg_restore: creating FK CONSTRAINT "public.employees employees_dept_id_fkey"
+pg_restore: creating FK CONSTRAINT "public.employees fk_manager"
+pg_restore: creating FK CONSTRAINT "public.student_enrollments student_enrollments_course_id_fkey"
+pg_restore: creating FK CONSTRAINT "public.student_enrollments student_enrollments_student_id_fkey"
+pg_restore: creating FK CONSTRAINT "public.targets targets_dept_id_fkey"
+pg_restore: creating FK CONSTRAINT "public.user_profiles user_profiles_user_id_fkey"
+pg_restore: creating FK CONSTRAINT "public.walls_properties walls_properties_wall_id_fkey"
+PS C:\pgmigration> $LASTEXITCODE
+0
+
+
+
+
+
+
 
 
 
