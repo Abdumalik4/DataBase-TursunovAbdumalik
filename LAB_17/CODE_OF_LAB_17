@@ -1,7 +1,7 @@
 postgres=# \copy accounts TO 'C:\Users\trsnv\Desktop\copies\accounts.csv' WITH CSV HEADER;
 COPY 6
 
--- The screenshot Copy_accounts is the evidence of the copy --
+-- The screenshot Copy_accounts.png is the evidence of the copy --
 
 postgres=# DELETE FROM accounts;
 DELETE 6
@@ -29,6 +29,48 @@ postgres=# SELECT * FROM accounts;
 postgres=# \copy accounts TO 'C:\Users\trsnv\Desktop\copies\accounts_delimiter.csv' WITH CSV HEADER DELIMITER ';'
 COPY 6
 
--- The screenshot with delimiter is provided in file Delimiter_accounts -- 
+-- The screenshot with delimiter is provided in file Delimiter_accounts.png -- 
+
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\WINDOWS\system32> dir "C:\Program Files\PostgreSQL"
+
+
+    Directory: C:\Program Files\PostgreSQL
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         15-Sep-26   8:01 AM                18
+
+
+PS C:\WINDOWS\system32> $env:Path += ";C:\Program Files\PostgreSQL\18\bin"
+PS C:\WINDOWS\system32> cd C:\Users\trsnv\Documents
+PS C:\Users\trsnv\Documents> pg_dump -U postgres -d postgres -Fc -f backup.dump
+Password:
+
+PS C:\Users\trsnv\Documents> createdb -U postgres test_restore
+Password:
+
+PS C:\Users\trsnv\Documents> pg_restore -U postgres -d test_restore backup.dump
+Password:
+
+PS C:\Users\trsnv\Documents> psql -U postgres -d test_restore -c "SELECT * FROM accounts;"
+Password for user postgres:
+
+ acc_id |  owner  | balance
+--------+---------+---------
+      3 | Bob     |  200.00
+      1 | Alice   |  900.00
+      2 | Bob     |  600.00
+      4 | Jimmy   | 1500.00
+      5 | Sanders | 5000.00
+      6 | Joel    | 1800.00
+(6 rows)
+
+-- The screenshot of the existence of the backup is provided in file backup.png --
+
+
 
 
