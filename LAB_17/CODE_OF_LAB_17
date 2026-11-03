@@ -2,3 +2,33 @@ postgres=# \copy accounts TO 'C:\Users\trsnv\Desktop\copies\accounts.csv' WITH C
 COPY 6
 
 -- The screenshot Copy_accounts is the evidence of the copy --
+
+postgres=# DELETE FROM accounts;
+DELETE 6
+postgres=# SELECT * FROM accounts;
+ acc_id | owner | balance
+--------+-------+---------
+(0 rows)
+
+
+postgres=# \copy accounts FROM 'C:/Users/trsnv/Desktop/copies/accounts.csv' WITH CSV HEADER;
+COPY 6
+postgres=# SELECT * FROM accounts;
+ acc_id |  owner  | balance
+--------+---------+---------
+      3 | Bob     |  200.00
+      1 | Alice   |  900.00
+      2 | Bob     |  600.00
+      4 | Jimmy   | 1500.00
+      5 | Sanders | 5000.00
+      6 | Joel    | 1800.00
+(6 rows) 
+
+-- I can import table back -- 
+
+postgres=# \copy accounts TO 'C:\Users\trsnv\Desktop\copies\accounts_delimiter.csv' WITH CSV HEADER DELIMITER ';'
+COPY 6
+
+-- The screenshot with delimiter is provided in file Delimiter_accounts -- 
+
+
